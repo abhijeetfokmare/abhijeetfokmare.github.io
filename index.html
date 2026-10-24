@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abhijeet Nilesh Fokmare — Systems, Security & Network Architecture</title>
+  <meta name="description" content="Portfolio of Abhijeet Nilesh Fokmare (abhijeetfokmare.me) — Computer Engineering student at PCCOE Pune, focusing on Cybersecurity, Network Engineering, Self-Hosted Infrastructure, and AI CLI Workflows." />
+
+  <!-- Google Fonts: Plus Jakarta Sans, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Three.js r128 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Plus Jakarta Sans"', 'sans-serif'],
+            sans: ['"Inter"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ==========================================================================
+       DUAL-THEME DESIGN TOKENS
+       1. DARK MODE (Default): Jet Black (#0A0A0A), Cerulean Blue (#007BA7), Neon Rose (#FF2D95)
+       2. LIGHT MODE: Ice Silver (#EBF0F5), Deep Aubergine (#2D142C), Marigold (#EAA221)
+    ========================================================================== */
+    :root,
+    html[data-theme="dark"] {
+      --bg-primary: #0A0A0A;
+      --bg-elevated: #111318;
+      --bg-surface: #161922;
+      --bg-glass: rgba(10, 10, 10, 0.84);
+      --bg-card: linear-gradient(165deg, rgba(19, 23, 31, 0.88) 0%, rgba(10, 10, 10, 0.96) 100%);
+      --bg-subcard: rgba(10, 10, 10, 0.78);
+
+      --text-primary: #F4F6F9;
+      --text-secondary: #CBD5E1;
+      --text-muted: #8E9BAE;
+      --text-on-accent: #FFFFFF;
+
+      --accent-primary: #007BA7;       /* Cerulean Blue */
+      --accent-primary-bright: #19A9DC; /* Luminous Cerulean for legibility */
+      --accent-secondary: #FF2D95;     /* Neon Rose */
+      --accent-secondary-soft: rgba(255, 45, 149, 0.14);
+      --accent-primary-soft: rgba(0, 123, 167, 0.18);
+
+      --border-hairline: rgba(0, 123, 167, 0.24);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 45, 149, 0.65);
+
+      --grid-line: rgba(0, 123, 167, 0.06);
+      --spotlight-color: rgba(255, 45, 149, 0.11);
+      --spotlight-secondary: rgba(0, 123, 167, 0.14);
+      --ambient-glow-1: rgba(0, 123, 167, 0.16);
+      --ambient-glow-2: rgba(255, 45, 149, 0.11);
+
+      --card-shadow: 0 22px 45px -20px rgba(0, 0, 0, 0.85), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+      --card-hover-shadow: 0 28px 55px -18px rgba(0, 0, 0, 0.92), 0 0 32px -8px rgba(255, 45, 149, 0.25), inset 0 1px 0 0 rgba(255, 45, 149, 0.4);
+      --status-online: #10B981;
+    }
+
+    html[data-theme="light"] {
+      --bg-primary: #EBF0F5;           /* Ice Silver */
+      --bg-elevated: #F7FAFC;          /* Frosted Ice Card Surface */
+      --bg-surface: #DFE6EE;           /* Crisp Ice Silver Secondary */
+      --bg-glass: rgba(235, 240, 245, 0.86);
+      --bg-card: linear-gradient(165deg, rgba(250, 252, 255, 0.95) 0%, rgba(232, 238, 245, 0.92) 100%);
+      --bg-subcard: rgba(223, 230, 238, 0.72);
+
+      --text-primary: #2D142C;         /* Deep Aubergine */
+      --text-secondary: #462245;       /* Rich Aubergine Secondary */
+      --text-muted: #6C4B6B;           /* Muted Aubergine Slate */
+      --text-on-accent: #2D142C;
+
+      --accent-primary: #2D142C;       /* Deep Aubergine Structural Accent */
+      --accent-primary-bright: #2D142C;
+      --accent-secondary: #EAA221;     /* Marigold */
+      --accent-secondary-soft: rgba(234, 162, 33, 0.20);
+      --accent-primary-soft: rgba(45, 20, 44, 0.09);
+
+      --border-hairline: rgba(45, 20, 44, 0.16);
+      --border-subtle: rgba(45, 20, 44, 0.11);
+      --border-hover: rgba(234, 162, 33, 0.85);
+
+      --grid-line: rgba(45, 20, 44, 0.055);
+      --spotlight-color: rgba(234, 162, 33, 0.18);
+      --spotlight-secondary: rgba(45, 20, 44, 0.08);
+      --ambient-glow-1: rgba(234, 162, 33, 0.18);
+      --ambient-glow-2: rgba(45, 20, 44, 0.09);
+
+      --card-shadow: 0 18px 38px -18px rgba(45, 20, 44, 0.14), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+      --card-hover-shadow: 0 26px 50px -16px rgba(45, 20, 44, 0.22), 0 0 30px -8px rgba(234, 162, 33, 0.35), inset 0 1px 0 0 rgba(234, 162, 33, 0.65);
+      --status-online: #059669;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    ::selection {
+      background: var(--accent-secondary);
+      color: #FFFFFF;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      perspective: 1400px;
+      transition: background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s ease;
+    }
+
+    /* Architectural Grid Background */
+    .arch-grid-bg {
+      background-size: 64px 64px;
+      background-image: 
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    }
+
+    /* Film Grain Overlay */
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* Theme-Aware Utility Classes */
+    .theme-text-primary { color: var(--text-primary); }
+    .theme-text-secondary { color: var(--text-secondary); }
+    .theme-text-muted { color: var(--text-muted); }
+    .theme-accent-primary { color: var(--accent-primary-bright); }
+    .theme-accent-secondary { color: var(--accent-secondary); }
+
+    .theme-bg-primary { background-color: var(--bg-primary); }
+    .theme-bg-elevated { background-color: var(--bg-elevated); }
+    .theme-bg-surface { background-color: var(--bg-surface); }
+    .theme-bg-subcard { background-color: var(--bg-subcard); }
+    .theme-bg-glass { background-color: var(--bg-glass); }
+
+    .theme-border { border-color: var(--border-hairline); }
+    .theme-border-subtle { border-color: var(--border-subtle); }
+
+    /* Primary & Secondary Action Buttons */
+    .btn-primary-theme {
+      background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+      color: #FFFFFF;
+      box-shadow: 0 10px 28px -8px var(--accent-secondary);
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, filter 0.25s ease;
+    }
+    html[data-theme="light"] .btn-primary-theme {
+      background: linear-gradient(135deg, #2D142C 0%, #52234F 55%, #EAA221 100%);
+      color: #FFFFFF;
+      box-shadow: 0 10px 25px -8px rgba(45, 20, 44, 0.45);
+    }
+    .btn-primary-theme:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .badge-primary-theme {
+      background-color: var(--accent-primary-soft);
+      color: var(--accent-primary-bright);
+      border: 1px solid var(--border-hairline);
+    }
+
+    .badge-secondary-theme {
+      background-color: var(--accent-secondary-soft);
+      color: var(--accent-secondary);
+      border: 1px solid var(--accent-secondary);
+    }
+    html[data-theme="light"] .badge-secondary-theme {
+      color: #9A6200;
+      border-color: rgba(234, 162, 33, 0.65);
+    }
+
+    /* Gradient Display Text */
+    .text-hero-gradient {
+      background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 50%, #19A9DC 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    html[data-theme="light"] .text-hero-gradient {
+      background: linear-gradient(135deg, #2D142C 0%, #572554 60%, #C8820A 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .text-accent-gradient {
+      background: linear-gradient(135deg, var(--accent-primary-bright) 0%, var(--accent-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    html[data-theme="light"] .text-accent-gradient {
+      background: linear-gradient(135deg, #2D142C 0%, #B87300 50%, #EAA221 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* 3D Perspective Tilt & Spotlight Card */
+    .tilt-card {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-hairline);
+      box-shadow: var(--card-shadow);
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
+      transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease, background 0.4s ease;
+      overflow: hidden;
+    }
+
+    .tilt-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--card-hover-shadow);
+    }
+
+    /* Radial Cursor Spotlight Effect inside Cards */
+    .tilt-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        520px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        var(--spotlight-color),
+        var(--spotlight-secondary) 35%,
+        transparent 65%
+      );
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .tilt-card:hover::before {
+      opacity: 1;
+    }
+
+    .tilt-content {
+      position: relative;
+      z-index: 2;
+      transform: translateZ(18px);
+    }
+
+    /* =======================================================
+       3D FLOW-IN ASSEMBLY CHOREOGRAPHY ENGINE
+    ======================================================== */
+    .flow-assemble {
+      opacity: 0;
+      filter: blur(8px);
+      transform: perspective(1300px) translate3d(var(--asm-x, 0px), var(--asm-y, 95px), -190px) rotateX(18deg) rotateY(var(--asm-ry, 0deg)) scale(0.91);
+      transition:
+        transform 1.05s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+        filter 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.9s ease,
+        box-shadow 0.9s ease;
+      transition-delay: var(--asm-delay, 0ms);
+      will-change: transform, opacity, filter;
+    }
+
+    .flow-assemble.assembled {
+      opacity: 1;
+      filter: blur(0px);
+      transform: perspective(1300px) translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg) scale(1);
+    }
+
+    @keyframes blueprintLockPulse {
+      0% {
+        border-color: var(--accent-secondary);
+        box-shadow: 0 0 38px -4px var(--spotlight-color), inset 0 0 18px var(--spotlight-secondary);
+      }
+      100% {
+        border-color: var(--border-hairline);
+      }
+    }
+
+    .flow-assemble.just-locked {
+      animation: blueprintLockPulse 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Assembly Corner Telemetry Badge */
+    .asm-lock-tag {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      color: var(--accent-secondary);
+      background: var(--bg-subcard);
+      border: 1px solid var(--border-hairline);
+      padding: 2px 6px;
+      border-radius: 4px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      z-index: 15;
+    }
+
+    .flow-assemble.just-locked .asm-lock-tag {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Custom Precision Cursor on Desktop */
+    @media (pointer: fine) {
+      #cursor-dot, #cursor-ring {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+      }
+      #cursor-dot {
+        width: 6px;
+        height: 6px;
+        background-color: var(--accent-secondary);
+        border-radius: 50%;
+      }
+      #cursor-ring {
+        width: 34px;
+        height: 34px;
+        border: 1px solid var(--accent-primary-bright);
+        border-radius: 50%;
+        opacity: 0.65;
+        transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+      }
+      body.cursor-hover #cursor-ring {
+        width: 52px;
+        height: 52px;
+        border-color: var(--accent-secondary);
+        background-color: var(--accent-secondary-soft);
+      }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-primary);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-secondary);
+    }
+  </style>
+</head>
+
+<body class="arch-grid-bg antialiased">
+
+  <!-- Film Grain Overlay -->
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <!-- Custom Desktop Cursor -->
+  <div id="cursor-dot" class="hidden lg:block"></div>
+  <div id="cursor-ring" class="hidden lg:block"></div>
+
+  <!-- Dual Ambient Illumination Orbs -->
+  <div class="pointer-events-none fixed top-0 left-1/4 -translate-x-1/2 w-[650px] h-[300px] blur-[150px] rounded-full z-0" style="background: var(--ambient-glow-1);"></div>
+  <div class="pointer-events-none fixed top-16 right-1/4 translate-x-1/3 w-[550px] h-[260px] blur-[150px] rounded-full z-0" style="background: var(--ambient-glow-2);"></div>
+
+  <!-- Global Toast Notification -->
+  <div id="global-toast" class="fixed top-20 right-6 z-[9999] pointer-events-none opacity-0 translate-y-[-10px] transition-all duration-300">
+    <div class="px-4 py-2.5 rounded-xl theme-bg-elevated backdrop-blur-md border theme-border shadow-2xl flex items-center gap-2.5 font-mono text-xs theme-text-primary">
+      <span class="w-2.5 h-2.5 rounded-full animate-ping" style="background-color: var(--accent-secondary);"></span>
+      <span id="global-toast-text">Copied to clipboard</span>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       FLOATING CINEMATIC AUTO-SCROLL & 3D ASSEMBLY HUD
+  =========================================== -->
+  <div id="auto-scroll-hud" class="fixed bottom-5 right-5 z-50 flex items-center gap-2 p-2 rounded-2xl theme-bg-glass backdrop-blur-xl border theme-border shadow-2xl">
+    
+    <!-- Circular Progress Ring + Play/Pause Toggle -->
+    <button id="hud-toggle-tour-btn" type="button" class="group flex items-center gap-2.5 px-3 py-2 rounded-xl theme-bg-surface border theme-border transition-all hover:opacity-90" title="Toggle Auto-Scroll 3D Assembly Tour">
+      <div class="relative w-6 h-6 flex items-center justify-center">
+        <svg class="w-6 h-6 -rotate-90" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" class="theme-text-muted opacity-25" stroke-width="2.5"></circle>
+          <circle id="hud-progress-circle" cx="18" cy="18" r="15" fill="none" stroke="var(--accent-secondary)" stroke-width="2.5" stroke-dasharray="94.2" stroke-dashoffset="94.2" stroke-linecap="round"></circle>
+        </svg>
+        <span id="hud-play-icon" class="absolute font-mono text-[10px] theme-accent-secondary">⏸</span>
+      </div>
+      <div class="text-left">
+        <div class="flex items-center gap-1.5">
+          <span id="hud-tour-status" class="font-mono text-[11px] font-semibold theme-accent-secondary tracking-wider">AUTO-SCROLL: ON</span>
+        </div>
+        <div class="font-mono text-[9px] theme-text-muted">
+          LOCKED: <span id="hud-lock-counter" class="theme-text-primary font-semibold">00/00</span>
+        </div>
+      </div>
+    </button>
+
+    <!-- Speed Selector (1x / 2x) -->
+    <button id="hud-speed-btn" type="button" class="px-2.5 py-2 rounded-xl theme-bg-surface border theme-border-subtle font-mono text-xs theme-text-secondary hover:opacity-80 transition-all" title="Toggle Auto-Scroll Speed">
+      1x
+    </button>
+
+    <!-- Replay 3D Assembly Button -->
+    <button id="hud-replay-btn" type="button" class="px-3 py-2 rounded-xl btn-primary-theme font-mono text-xs font-semibold transition-all flex items-center gap-1" title="Reset & Replay 3D Flow-In Assembly">
+      <span>↺</span>
+      <span class="hidden sm:inline">Replay 3D</span>
+    </button>
+  </div>
+
+  <!-- ==========================================
+       01. ARCHITECTURAL NAVIGATION BAR (WITH THEME SWITCHER)
+  =========================================== -->
+  <header class="sticky top-0 z-50 backdrop-blur-xl theme-bg-glass border-b theme-border transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+      
+      <!-- Brand Identity -->
+      <div class="flex items-center gap-4">
+        <a href="#top" class="group flex items-center gap-3 focus:outline-none">
+          <div class="w-9 h-9 rounded-lg theme-bg-surface border theme-border flex items-center justify-center font-mono font-bold text-sm theme-accent-secondary transition-transform group-hover:scale-105 shadow-inner">
+            AF
+          </div>
+          <div class="flex flex-col">
+            <span class="font-display font-bold text-sm tracking-tight theme-text-primary transition-colors">
+              abhijeetfokmare<span class="theme-accent-secondary">.me</span>
+            </span>
+            <span class="font-mono text-[10px] theme-text-muted tracking-wider uppercase">
+              PCCOE Pune // B.Tech Comp. Eng. '30
+            </span>
+          </div>
+        </a>
+
+        <!-- Live Telemetry Pill -->
+        <div class="hidden xl:flex items-center gap-2 pl-4 border-l theme-border-subtle">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span class="font-mono text-[11px] theme-text-secondary">
+            Akurdi, Pune, IN
+          </span>
+        </div>
+      </div>
+
+      <!-- Navigation Links (No Shell/CLI link) -->
+      <nav class="hidden lg:flex items-center gap-1 font-mono text-xs">
+        <a href="#overview" class="px-3 py-1.5 rounded-md theme-text-secondary hover:opacity-100 transition-all">
+          <span class="theme-accent-secondary font-semibold">01.</span>Overview
+        </a>
+        <a href="#bento" class="px-3 py-1.5 rounded-md theme-text-secondary hover:opacity-100 transition-all">
+          <span class="theme-accent-secondary font-semibold">02.</span>Architecture
+        </a>
+        <a href="#milestones" class="px-3 py-1.5 rounded-md theme-text-secondary hover:opacity-100 transition-all">
+          <span class="theme-accent-secondary font-semibold">03.</span>Milestones
+        </a>
+        <a href="#contact" class="px-3 py-1.5 rounded-md theme-text-secondary hover:opacity-100 transition-all">
+          <span class="theme-accent-secondary font-semibold">04.</span>Uplink
+        </a>
+      </nav>
+
+      <!-- Theme Switcher, Tour Mode, Socials & Command Palette Trigger -->
+      <div class="flex items-center gap-2">
+        
+        <!-- DUAL-THEME SWITCHER BUTTON -->
+        <button id="theme-toggle-btn" type="button" onclick="toggleSiteTheme()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg theme-bg-surface border theme-border text-xs font-mono theme-text-primary hover:opacity-90 transition-all shadow-sm" title="Switch Theme">
+          <span id="theme-toggle-dot" class="w-2.5 h-2.5 rounded-full" style="background: linear-gradient(135deg, var(--accent-primary-bright), var(--accent-secondary));"></span>
+          <span id="theme-toggle-label" class="font-semibold">Light</span>
+        </button>
+
+        <!-- Navbar Tour Mode Button -->
+        <button id="nav-tour-btn" type="button" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg badge-secondary-theme text-xs font-mono transition-all">
+          <span id="nav-tour-indicator" class="w-1.5 h-1.5 rounded-full animate-pulse" style="background-color: var(--accent-secondary);"></span>
+          <span>Tour</span>
+        </button>
+
+        <!-- Command Palette Button -->
+        <button id="open-cmd-btn" type="button" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg theme-bg-surface border theme-border-subtle text-xs font-mono theme-text-secondary hover:opacity-90 transition-all">
+          <span class="hidden md:inline">Cmd</span>
+          <kbd class="px-1.5 py-0.5 text-[10px] theme-bg-primary rounded border theme-border-subtle theme-accent-secondary font-semibold">⌘K</kbd>
+        </button>
+
+        <!-- Direct Copy Email Icon Button -->
+        <button type="button" onclick="copyEmailToClipboard()" title="Copy Email: abhijeetnfokmare@gmail.com" aria-label="Copy Email Address" class="p-2 rounded-lg theme-bg-surface border theme-border-subtle theme-text-secondary hover:opacity-80 transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </button>
+
+        <!-- LinkedIn Profile Icon -->
+        <a href="https://www.linkedin.com/in/abhijeet-nilesh-fokmare-a95719410" target="_blank" rel="noopener noreferrer" title="LinkedIn: in/abhijeet-nilesh-fokmare-a95719410" aria-label="LinkedIn Profile" class="p-2 rounded-lg theme-bg-surface border theme-border-subtle theme-text-secondary hover:opacity-80 transition-all">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+          </svg>
+        </a>
+
+        <!-- GitHub Profile Icon -->
+        <a href="https://github.com/abhijeetfokmare" target="_blank" rel="noopener noreferrer" title="GitHub: @abhijeetfokmare" aria-label="GitHub Profile" class="hidden sm:inline-flex p-2 rounded-lg theme-bg-surface border theme-border-subtle theme-text-secondary hover:opacity-80 transition-all">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Architectural Frame -->
+  <main id="top" class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-x theme-border-subtle">
+
+    <!-- ==========================================
+         02. HERO SECTION & INTERACTIVE 3D SCULPTURE
+    =========================================== -->
+    <section id="overview" class="relative py-12 lg:py-20 border-b theme-border">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+        
+        <!-- Left Column: Typography & Identity (7 Cols) -->
+        <div class="lg:col-span-7 space-y-6 flow-assemble" data-asm="left">
+          
+          <!-- Monospace System Tag & Palette Badge -->
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full theme-bg-surface border theme-border">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+              <span class="font-mono text-[10px] sm:text-[11px] tracking-widest uppercase theme-accent-primary font-semibold">
+                SYS.ONLINE // PUNE, IN // PCCOE COMP. ENG.
+              </span>
+            </div>
+            <span id="active-palette-pill" class="font-mono text-[10px] px-2.5 py-1 rounded-full badge-secondary-theme uppercase tracking-wider font-semibold">
+              PALETTE // JET BLACK • CERULEAN • NEON ROSE
+            </span>
+          </div>
+
+          <!-- Display Name & Headline -->
+          <div class="space-y-3">
+            <h1 class="font-display text-4xl sm:text-6xl lg:text-[62px] font-extrabold tracking-tight leading-[1.05] text-hero-gradient">
+              Abhijeet Nilesh Fokmare
+            </h1>
+            <p class="font-display text-lg sm:text-xl lg:text-2xl font-medium theme-text-secondary leading-snug max-w-2xl">
+              Systems, <span class="text-accent-gradient font-bold">Cybersecurity</span> &amp; <span class="theme-text-primary font-bold">Network Infrastructure</span> Engineer — architecting zero-trust mesh networks and AI-augmented tooling.
+            </p>
+          </div>
+
+          <!-- Detailed Bio -->
+          <p class="text-sm sm:text-base theme-text-secondary leading-relaxed max-w-2xl">
+            B.Tech Computer Engineering '30 undergraduate at <strong class="theme-text-primary font-semibold">Pimpri Chinchwad College of Engineering (PCCOE), Akurdi, Pune</strong> (Section L), originally from Akot, Maharashtra. Backed by a <span class="font-mono text-xs badge-primary-theme px-1.5 py-0.5 rounded font-semibold">99.27%ile MHT-CET</span> &amp; <span class="font-mono text-xs badge-secondary-theme px-1.5 py-0.5 rounded font-semibold">95.45%ile JEE Mains</span> quantitative foundation, building encrypted Linux/Tailscale mesh servers, CTF security labs, and automated CLI engineering workflows.
+          </p>
+
+          <!-- Primary CTA & Direct Contact / Social Row -->
+          <div class="pt-1 space-y-3">
+            <div class="flex flex-wrap items-center gap-3">
+              <button type="button" onclick="replayAndStartTour()" class="btn-primary-theme inline-flex items-center gap-2.5 px-5 py-3 rounded-xl font-display font-semibold text-sm">
+                <span>⏵ Start Auto-Assembly Tour</span>
+              </button>
+
+              <!-- Interactive Email Pill with Copy + Mailto -->
+              <div class="inline-flex items-center rounded-xl theme-bg-surface border theme-border p-1 transition-all">
+                <a href="mailto:abhijeetnfokmare@gmail.com" class="px-3 py-1.5 font-mono text-xs theme-text-primary hover:opacity-80 transition-opacity flex items-center gap-2">
+                  <svg class="w-3.5 h-3.5 theme-accent-secondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span class="font-medium">abhijeetnfokmare@gmail.com</span>
+                </a>
+                <button type="button" onclick="copyEmailToClipboard()" class="px-2.5 py-1.5 rounded-lg btn-primary-theme font-mono text-[11px] font-semibold transition-all">
+                  Copy
+                </button>
+              </div>
+            </div>
+
+            <!-- Social Uplink Row: LinkedIn, GitHub, LeetCode -->
+            <div class="flex flex-wrap items-center gap-2.5 pt-1">
+              <a href="https://www.linkedin.com/in/abhijeet-nilesh-fokmare-a95719410" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-lg theme-bg-elevated border theme-border font-mono text-xs theme-text-primary hover:opacity-85 transition-all flex items-center gap-2 shadow-sm">
+                <svg class="w-3.5 h-3.5 theme-accent-secondary" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                </svg>
+                <span>in/abhijeet-nilesh-fokmare-a95719410</span>
+                <span class="theme-accent-secondary">↗</span>
+              </a>
+
+              <a href="https://github.com/abhijeetfokmare" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-lg theme-bg-elevated border theme-border-subtle font-mono text-xs theme-text-secondary hover:opacity-85 transition-all flex items-center gap-1.5">
+                <span>GitHub @abhijeetfokmare</span>
+                <span class="theme-accent-primary">↗</span>
+              </a>
+
+              <a href="https://leetcode.com/u/abhijeetfokmare26/" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-lg theme-bg-elevated border theme-border-subtle font-mono text-xs theme-text-secondary hover:opacity-85 transition-all flex items-center gap-1.5">
+                <span>LeetCode</span>
+                <span class="theme-accent-primary">↗</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Architectural Metric Strip -->
+          <div class="pt-5 grid grid-cols-2 sm:grid-cols-4 gap-3 border-t theme-border-subtle">
+            <div class="p-3 rounded-xl theme-bg-elevated border theme-border-subtle">
+              <div class="font-mono text-[10px] uppercase tracking-wider theme-text-muted">MHT-CET 2026</div>
+              <div class="font-display text-xl font-bold theme-text-primary mt-0.5">99.27 <span class="text-xs font-mono theme-accent-secondary">%ile</span></div>
+            </div>
+            <div class="p-3 rounded-xl theme-bg-elevated border theme-border-subtle">
+              <div class="font-mono text-[10px] uppercase tracking-wider theme-text-muted">JEE Mains 2026</div>
+              <div class="font-display text-xl font-bold theme-text-primary mt-0.5">95.45 <span class="text-xs font-mono theme-accent-primary">%ile</span></div>
+            </div>
+            <div class="p-3 rounded-xl theme-bg-elevated border theme-border-subtle">
+              <div class="font-mono text-[10px] uppercase tracking-wider theme-text-muted">SSB Defence Entry</div>
+              <div class="font-display text-xl font-bold theme-text-primary mt-0.5">TES-56 <span class="text-xs font-mono theme-accent-secondary">Bhopal</span></div>
+            </div>
+            <div class="p-3 rounded-xl theme-bg-elevated border theme-border-subtle">
+              <div class="font-mono text-[10px] uppercase tracking-wider theme-text-muted">Institution</div>
+              <div class="font-display text-xl font-bold theme-text-primary mt-0.5">PCCOE <span class="text-xs font-mono theme-accent-primary">Pune</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive Three.js 3D Sculpture (5 Cols) -->
+        <div class="lg:col-span-5 flow-assemble" data-asm="right">
+          <div class="relative rounded-2xl theme-bg-elevated border theme-border overflow-hidden shadow-2xl">
+            
+            <!-- Top HUD Overlay -->
+            <div class="absolute top-3.5 left-4 right-4 z-20 flex items-center justify-between pointer-events-none">
+              <div class="flex items-center gap-2 px-2.5 py-1 rounded-md theme-bg-glass backdrop-blur-md border theme-border">
+                <span class="w-2 h-2 rounded-full animate-pulse" style="background-color: var(--accent-secondary);"></span>
+                <span id="webgl-mode-label" class="font-mono text-[10px] theme-text-primary uppercase tracking-wider font-semibold">
+                  TOPOLOGY // MESH_CORE_3D
+                </span>
+              </div>
+              <span id="webgl-scroll-telemetry" class="font-mono text-[10px] badge-secondary-theme px-2 py-1 rounded font-semibold">
+                DEPTH: 0.00rad
+              </span>
+            </div>
+
+            <!-- Three.js Canvas Container -->
+            <div id="hero-canvas-container" class="w-full h-[380px] sm:h-[430px] cursor-grab active:cursor-grabbing relative"></div>
+
+            <!-- Bottom Interactive Topology Switcher -->
+            <div class="p-3 theme-bg-glass border-t theme-border flex flex-wrap items-center justify-between gap-2">
+              <span class="font-mono text-[10px] theme-text-muted uppercase tracking-wider pl-1">
+                3D Geometry:
+              </span>
+              <div class="flex items-center gap-1.5">
+                <button type="button" data-mode="network" class="mode-switch-btn px-2.5 py-1 rounded text-[11px] font-mono badge-secondary-theme font-semibold transition-all">
+                  01.Mesh Node
+                </button>
+                <button type="button" data-mode="orbital" class="mode-switch-btn px-2.5 py-1 rounded text-[11px] font-mono theme-bg-surface theme-text-secondary border theme-border-subtle transition-all">
+                  02.Orbital Ring
+                </button>
+                <button type="button" data-mode="cipher" class="mode-switch-btn px-2.5 py-1 rounded text-[11px] font-mono theme-bg-surface theme-text-secondary border theme-border-subtle transition-all">
+                  03.Security Core
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         03. INTERACTIVE 3D BENTO ARCHITECTURE GRID
+    =========================================== -->
+    <section id="bento" class="py-16 lg:py-24 border-b theme-border">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4 flow-assemble" data-asm="center">
+        <div>
+          <div class="font-mono text-xs theme-accent-secondary uppercase tracking-widest mb-2 font-semibold">
+            // 02. SYSTEM ARCHITECTURE &amp; TELEMETRY
+          </div>
+          <h2 class="font-display text-3xl sm:text-4xl font-bold theme-text-primary tracking-tight">
+            Engineering Stack &amp; Operational Focus
+          </h2>
+        </div>
+      </div>
+
+      <!-- Bento Grid (12 Columns) -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
+
+        <!-- CARD 1: Primary Domain Focus (7 Cols) -->
+        <div class="tilt-card flow-assemble md:col-span-7 rounded-2xl p-6 sm:p-8 flex flex-col justify-between" data-asm="left">
+          <div class="tilt-content space-y-6">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-xs uppercase tracking-widest px-2.5 py-1 rounded badge-primary-theme font-semibold">
+                CORE DOMAINS
+              </span>
+              <span class="font-mono text-xs theme-text-muted">SYS_ARCH // 01</span>
+            </div>
+
+            <div class="space-y-2">
+              <h3 class="font-display text-2xl font-bold theme-text-primary">
+                Zero-Trust Mesh Networking, Offensive Security &amp; AI CLI
+              </h3>
+              <p class="text-sm theme-text-secondary leading-relaxed">
+                Bridging low-level computer engineering fundamentals with practical system administration. From configuring encrypted peer-to-peer Tailscale mesh networks and hardened Ubuntu servers to dissecting packets in Capture The Flag (CTF) labs and minimizing Karnaugh Maps.
+              </p>
+            </div>
+
+            <!-- 3 Sub-pillars -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2">
+              <div class="p-4 rounded-xl theme-bg-subcard border theme-border-subtle transition-colors">
+                <div class="font-mono text-xs theme-accent-secondary font-semibold mb-1">01 // SEC_OPS</div>
+                <div class="font-display font-semibold text-sm theme-text-primary mb-1">Ethical Hacking &amp; CTF</div>
+                <p class="text-xs theme-text-muted leading-relaxed">
+                  Vulnerability reconnaissance, packet inspection, cryptography, and binary exploitation labs.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-xl theme-bg-subcard border theme-border-subtle transition-colors">
+                <div class="font-mono text-xs theme-accent-primary font-semibold mb-1">02 // NET_INFRA</div>
+                <div class="font-display font-semibold text-sm theme-text-primary mb-1">Zero-Trust Mesh</div>
+                <p class="text-xs theme-text-muted leading-relaxed">
+                  Ubuntu server orchestration, Tailscale WireGuard mesh tunnels, Proton VPN, and firewall rules.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-xl theme-bg-subcard border theme-border-subtle transition-colors">
+                <div class="font-mono text-xs theme-accent-secondary font-semibold mb-1">03 // AI_AUTOMATION</div>
+                <div class="font-display font-semibold text-sm theme-text-primary mb-1">Agentic Workflows</div>
+                <p class="text-xs theme-text-muted leading-relaxed">
+                  Claude Code CLI, Open Interpreter, and custom Python/PowerShell automation pipelines.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: Live Pune IST Environment & Workstation Node (5 Cols) -->
+        <div class="tilt-card flow-assemble md:col-span-5 rounded-2xl p-6 sm:p-8 flex flex-col justify-between" data-asm="right">
+          <div class="tilt-content space-y-5">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-xs uppercase tracking-widest px-2.5 py-1 rounded badge-secondary-theme flex items-center gap-2 font-semibold">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+                NODE ONLINE
+              </span>
+              <span id="live-ist-clock" class="font-mono text-xs theme-text-primary theme-bg-subcard px-2.5 py-1 rounded border theme-border-subtle">
+                IST --:--:--
+              </span>
+            </div>
+
+            <div>
+              <h3 class="font-display text-xl font-bold theme-text-primary">
+                Dual-OS Engineering &amp; Direct Uplink
+              </h3>
+              <p class="text-xs theme-text-secondary mt-1">
+                Configured for rapid context switching between C/Python systems programming, network testing, and direct engineering collaboration.
+              </p>
+            </div>
+
+            <!-- Spec Table -->
+            <div class="space-y-2 font-mono text-xs">
+              <div class="flex items-center justify-between py-2 px-3 rounded-lg theme-bg-subcard border theme-border-subtle">
+                <span class="theme-text-muted">OS_ENV</span>
+                <span class="theme-text-primary font-medium">Ubuntu Linux / Windows 11 PowerShell</span>
+              </div>
+              <div class="flex items-center justify-between py-2 px-3 rounded-lg theme-bg-subcard border theme-border-subtle">
+                <span class="theme-text-muted">EMAIL_NODE</span>
+                <button type="button" onclick="copyEmailToClipboard()" class="theme-accent-secondary font-semibold hover:underline">abhijeetnfokmare@gmail.com ⧉</button>
+              </div>
+              <div class="flex items-center justify-between py-2 px-3 rounded-lg theme-bg-subcard border theme-border-subtle">
+                <span class="theme-text-muted">LINKEDIN</span>
+                <a href="https://www.linkedin.com/in/abhijeet-nilesh-fokmare-a95719410" target="_blank" rel="noopener noreferrer" class="theme-text-primary font-medium hover:underline">in/abhijeet-nilesh-fokmare ↗</a>
+              </div>
+              <div class="flex items-center justify-between py-2 px-3 rounded-lg theme-bg-subcard border theme-border-subtle">
+                <span class="theme-text-muted">LOCATION</span>
+                <span class="theme-text-primary font-medium">Akurdi, Pune &amp; Akot, MH</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: Interactive Technical Arsenal / Toolchain (7 Cols) -->
+        <div class="tilt-card flow-assemble md:col-span-7 rounded-2xl p-6 sm:p-8" data-asm="left">
+          <div class="tilt-content space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span class="font-mono text-[11px] theme-accent-secondary uppercase tracking-widest font-semibold">TECHNICAL ARSENAL</span>
+                <h3 class="font-display text-xl font-bold theme-text-primary mt-0.5">Languages, Digital Logic &amp; Security Stack</h3>
+              </div>
+              <span id="skill-telemetry-readout" class="font-mono text-[11px] badge-primary-theme px-3 py-1 rounded-md font-medium">
+                Hover any module to inspect proficiency
+              </span>
+            </div>
+
+            <!-- Categorized Interactive Skill Pills -->
+            <div class="space-y-4 pt-1">
+              
+              <!-- Category 1 -->
+              <div>
+                <div class="font-mono text-[11px] theme-text-muted uppercase mb-2">Languages &amp; Engineering Foundations</div>
+                <div class="flex flex-wrap gap-2">
+                  <button type="button" data-info="C Programming — Pointers, memory layout, structs, Karnaugh map minimizers & PCCOE systems lab" class="skill-pill px-3 py-1.5 rounded-lg theme-bg-subcard border theme-border-subtle hover:border-current text-xs font-mono theme-text-primary transition-all">C Language</button>
+                  <button type="button" data-info="Python 3 — Automation scripts, CTF recon tooling & AI CLI integration" class="skill-pill px-3 py-1.5 rounded-lg theme-bg-subcard border theme-border-subtle hover:border-current text-xs font-mono theme-text-primary transition-all">Python</button>
+                  <button type="button" data-info="C++ — Object-oriented systems & competitive algorithmic problem solving" class="skill-pill px-3 py-1.5 rounded-lg theme-bg-subcard border theme-border-subtle hover:border-current text-xs font-mono theme-text-primary transition-all">C++</button>
+                  <button type="button" data-info="React & Vite — Modern frontend architecture & custom portfolio deployment" class="skill-pill px-3 py-1.5 rounded-lg theme-bg-subcard border theme-border-subtle hover:border-current text-xs font-mono theme-text-primary transition-all">React / Vite</button>
+                  <button type="button" data-info="Three.js & WebGL — Real-time 3D spatial interfaces & scroll-reactive shaders" class="skill-pill px-3 py-1.5 rounded-lg theme-bg-subcard border theme-border-subtle hover:border-current text-xs font-mono theme-text-primary transition-all">Three.js / WebGL</button>
+                  <button type="button" data-info="Digital Electronics — Logic gates, Karnaugh Maps (K-Maps) & Boolean algebra" class="skill-pill px-3 py-1.5 rounded-lg theme-bg-subcard border theme-border-subtle hover:border-current text-xs font-mono theme-text-primary transition-all">Digital Logic &amp; K-Maps</button>
+                  <button type="button" data-info="Engineering Mathematics — Matrices, Eigenvalues & Linear Algebra transformations" class="skill-pill px-3 py-1.5 rounded-lg theme-bg-subcard border theme-border-subtle hover:border-current text-xs font-mono theme-text-primary transition-all">Linear Algebra</button>
+                </div>
+              </div>
+
+              <!-- Category 2 -->
+              <div>
+                <div class="font-mono text-[11px] theme-text-muted uppercase mb-2">Network Engineering, OS &amp; Developer Tooling</div>
+                <div class="flex flex-wrap gap-2">
+                  <button type="button" data-info="Linux / Ubuntu — Bash scripting, permissions, systemd & server hosting" class="skill-pill px-3 py-1.5 rounded-lg theme-bg-subcard border theme-border text-xs font-mono theme-accent-secondary font-semibold transition-all">Linux / Ubuntu</button>
+                  <button type="button" data-info="Tailscale Mesh — Zero-config WireGuard mesh networking for multiplayer & private nodes" class="skill-pill px-3 py-1.5 rounded-lg theme-bg-subcard border theme-border text-xs font-mono theme-accent-primary font-semibold transition-all">Tailscale Mesh VPN</button>
+                  <button type="button" data-info="Git & GitHub — Version control, open-source PRs, GitHub Pages & custom DNS" class="skill-pill px-3 py-1.5 rounded-lg theme-bg-subcard border theme-border-subtle text-xs font-mono theme-text-primary transition-all">Git &amp; GitHub</button>
+                  <button type="button" data-info="Claude Code CLI & Open Interpreter — Autonomous terminal coding & diagnostics" class="skill-pill px-3 py-1.5 rounded-lg theme-bg-subcard border theme-border text-xs font-mono theme-accent-secondary font-semibold transition-all">Claude Code CLI</button>
+                  <button type="button" data-info="Windows PowerShell — System administration, environment automation & network diagnostics" class="skill-pill px-3 py-1.5 rounded-lg theme-bg-subcard border theme-border-subtle text-xs font-mono theme-text-primary transition-all">PowerShell</button>
+                  <button type="button" data-info="Network Security — Packet inspection, firewall rules, Proton VPN & CTF analysis" class="skill-pill px-3 py-1.5 rounded-lg theme-bg-subcard border theme-border-subtle text-xs font-mono theme-text-primary transition-all">Packet &amp; Network Analysis</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4: Beyond the Screen — Discipline & Off-Screen (5 Cols) -->
+        <div class="tilt-card flow-assemble md:col-span-5 rounded-2xl p-6 sm:p-8 flex flex-col justify-between" data-asm="right">
+          <div class="tilt-content space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-[11px] theme-accent-secondary uppercase tracking-widest font-semibold">OFF-SCREEN PROTOCOL</span>
+              <span class="font-mono text-xs theme-text-muted">DISCIPLINE // 04</span>
+            </div>
+
+            <h3 class="font-display text-xl font-bold theme-text-primary">
+              Endurance, Agronomy &amp; F1 Telemetry
+            </h3>
+            <p class="text-xs theme-text-secondary leading-relaxed">
+              Physical conditioning and analytical focus away from engineering labs—from Sahyadri fort treks to motorsport strategy.
+            </p>
+
+            <div class="grid grid-cols-2 gap-3 pt-1">
+              <div class="p-3.5 rounded-xl theme-bg-subcard border theme-border-subtle">
+                <div class="font-mono text-[11px] theme-accent-secondary font-semibold">06:00–07:00 AM</div>
+                <div class="font-display font-semibold text-sm theme-text-primary mt-0.5">Strength Training</div>
+                <p class="text-[11px] theme-text-muted mt-1">Daily morning hypertrophy &amp; athletic conditioning.</p>
+              </div>
+
+              <div class="p-3.5 rounded-xl theme-bg-subcard border theme-border-subtle">
+                <div class="font-mono text-[11px] theme-accent-primary font-semibold">SAHYADRI ROUTES</div>
+                <div class="font-display font-semibold text-sm theme-text-primary mt-0.5">Cycling &amp; Fort Treks</div>
+                <p class="text-[11px] theme-text-muted mt-1">Endurance cycling &amp; Sinhagad / Lohagad fort ascents.</p>
+              </div>
+
+              <div class="p-3.5 rounded-xl theme-bg-subcard border theme-border-subtle">
+                <div class="font-mono text-[11px] theme-accent-secondary font-semibold">RED BULL RACING</div>
+                <div class="font-display font-semibold text-sm theme-text-primary mt-0.5">F1 Strategy &amp; Data</div>
+                <p class="text-[11px] theme-text-muted mt-1">Max Verstappen telemetry, aero &amp; pit-wall race pace.</p>
+              </div>
+
+              <div class="p-3.5 rounded-xl theme-bg-subcard border theme-border-subtle">
+                <div class="font-mono text-[11px] theme-accent-primary font-semibold">AGRONOMY</div>
+                <div class="font-display font-semibold text-sm theme-text-primary mt-0.5">Soil &amp; Crop Care</div>
+                <p class="text-[11px] theme-text-muted mt-1">Home gardening &amp; Maharashtra seasonal crop profiling.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         04. ACADEMIC EXCELLENCE & MILESTONES TIMELINE
+    =========================================== -->
+    <section id="milestones" class="py-16 lg:py-24 border-b theme-border">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        
+        <!-- Left Sticky Header (4 Cols) -->
+        <div class="lg:col-span-4 space-y-4 flow-assemble" data-asm="left">
+          <div class="font-mono text-xs theme-accent-secondary uppercase tracking-widest font-semibold">
+            // 03. ACADEMIC &amp; LEADERSHIP TIMELINE
+          </div>
+          <h2 class="font-display text-3xl sm:text-4xl font-bold theme-text-primary tracking-tight">
+            Academic Distinction &amp; Milestones
+          </h2>
+          <p class="text-sm theme-text-secondary leading-relaxed">
+            Grounded in rigorous quantitative preparation across Physics, Chemistry, Mathematics, and Digital Logic—transitioning from top 1% state engineering ranks into Computer Engineering at PCCOE Pune.
+          </p>
+
+          <!-- Highlight Card -->
+          <div class="p-5 rounded-2xl theme-bg-elevated border theme-border space-y-2 mt-6 shadow-md">
+            <div class="font-mono text-[11px] theme-accent-secondary uppercase font-semibold">Current Academic Standing</div>
+            <div class="font-display font-bold text-lg theme-text-primary">B.Tech Computer Engineering '30</div>
+            <div class="text-xs theme-text-secondary">Pimpri Chinchwad College of Engineering (PCCOE), Akurdi, Pune • First Year (Section L)</div>
+          </div>
+        </div>
+
+        <!-- Right Architectural Timeline (8 Cols) -->
+        <div class="lg:col-span-8 space-y-4">
+
+         
+
+          <!-- Milestone 1: Sep 2026 -->
+          <div class="tilt-card flow-assemble rounded-2xl p-6" data-asm="right">
+            <div class="tilt-content flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+              <span class="font-mono text-xs theme-accent-primary font-semibold">SEPTEMBER 2026 — PRESENT</span>
+              <span class="font-mono text-xs theme-text-muted">AKURDI, PUNE, MAHARASHTRA</span>
+            </div>
+            <div class="tilt-content">
+              <h3 class="font-display text-lg sm:text-xl font-bold theme-text-primary">
+                Enrolled in B.Tech Computer Engineering — PCCOE Akurdi, Pune (Section L)
+              </h3>
+              <p class="text-xs sm:text-sm theme-text-secondary mt-1.5 leading-relaxed">
+                Pursuing undergraduate Computer Engineering at Pimpri Chinchwad College of Engineering. Core coursework and lab specialization in <strong class="theme-text-primary">Programming in C &amp; Python</strong>, <strong class="theme-text-primary">Digital Electronics &amp; Logic Design (K-Maps)</strong>, <strong class="theme-text-primary">Linear Algebra</strong>, and <strong class="theme-text-primary">Computer Networks</strong>.
+              </p>
+            </div>
+          </div>
+
+          <!-- Milestone 2: Aug 2026 -->
+          <div class="tilt-card flow-assemble rounded-2xl p-6" data-asm="right">
+            <div class="tilt-content flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+              <span class="font-mono text-xs theme-accent-secondary font-semibold">AUGUST 2026</span>
+              <span class="font-mono text-xs theme-text-muted">SELECTION CENTRE CENTRAL, BHOPAL</span>
+            </div>
+            <div class="tilt-content">
+              <h3 class="font-display text-lg sm:text-xl font-bold theme-text-primary">
+                10+2 Technical Entry Scheme (TES-56) — SSB Interview
+              </h3>
+              <p class="text-xs sm:text-sm theme-text-secondary mt-1.5 leading-relaxed">
+                Shortlisted via JEE Mains merit and completed the Services Selection Board (SSB) assessment for the Indian Army 10+2 Technical Entry Scheme (TES-56) at Selection Centre Central, Bhopal—demonstrating group planning, tactical resilience, and officer-like leadership qualities.
+              </p>
+            </div>
+          </div>
+
+          <!-- Milestone 3: Jul-Aug 2026 -->
+          <div class="tilt-card flow-assemble rounded-2xl p-6" data-asm="right">
+            <div class="tilt-content flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+              <span class="font-mono text-xs theme-accent-primary font-semibold">JULY — AUGUST 2026</span>
+              <span class="font-mono text-xs badge-secondary-theme px-2 py-0.5 rounded font-semibold">TOP 1% STATE MERIT</span>
+            </div>
+            <div class="tilt-content">
+              <h3 class="font-display text-lg sm:text-xl font-bold theme-text-primary">
+                99.27 Percentile in MHT-CET 2026 &amp; 95.45 Percentile in JEE Mains 2026
+              </h3>
+              <p class="text-xs sm:text-sm theme-text-secondary mt-1.5 leading-relaxed">
+                Secured <strong class="theme-accent-secondary font-semibold">99.27 percentile</strong> in the Maharashtra Common Entrance Test (MHT-CET 2026) and <strong class="theme-accent-primary font-semibold">95.45 percentile</strong> in the National JEE Mains 2026 examination; completed 12th PCM at <strong class="theme-text-primary">Mauli Junior College of Science, Akola</strong> and 10th SSC with <strong class="theme-accent-secondary font-semibold">90.50%</strong> distinction.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         05. DIRECT CONTACT & UPLINK SECTION
+    =========================================== -->
+    <section id="contact" class="py-16 lg:py-24">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        
+        <!-- Left Column: High-Impact 3D Contact Uplink Cards (6 Cols) -->
+        <div class="lg:col-span-6 space-y-6 flow-assemble" data-asm="left">
+          <div class="font-mono text-xs theme-accent-secondary uppercase tracking-widest font-semibold">
+            // 04. DIRECT UPLINK &amp; TRANSMISSION
+          </div>
+          <h2 class="font-display text-3xl sm:text-5xl font-extrabold text-hero-gradient tracking-tight leading-tight">
+            Initiate direct transmission.
+          </h2>
+          <p class="text-sm sm:text-base theme-text-secondary leading-relaxed max-w-xl">
+            Available for cybersecurity research, network infrastructure engineering, open-source collaborations, and PCCOE hackathon teams in Pune.
+          </p>
+
+          <!-- High-Impact 3D Contact Cards -->
+          <div class="space-y-3.5 pt-2">
+            
+            <!-- 1. Email Uplink Card -->
+            <div class="tilt-card rounded-2xl p-5">
+              <div class="tilt-content flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="space-y-1">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span class="font-mono text-[10px] theme-accent-secondary uppercase tracking-wider font-semibold">DIRECT ELECTRONIC MAIL</span>
+                  </div>
+                  <a href="mailto:abhijeetnfokmare@gmail.com" class="font-mono text-sm sm:text-base font-bold theme-text-primary hover:underline break-all">
+                    abhijeetnfokmare@gmail.com
+                  </a>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <button type="button" onclick="copyEmailToClipboard()" class="px-3.5 py-2 rounded-xl btn-primary-theme font-mono text-xs font-semibold transition-all">
+                    Copy Email
+                  </button>
+                  <a href="mailto:abhijeetnfokmare@gmail.com" class="px-3.5 py-2 rounded-xl theme-bg-subcard border theme-border font-mono text-xs theme-text-primary hover:opacity-80 transition-all">
+                    Mailto ↗
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. LinkedIn Uplink Card -->
+            <div class="tilt-card rounded-2xl p-5">
+              <div class="tilt-content flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="space-y-1">
+                  <div class="font-mono text-[10px] theme-accent-primary uppercase tracking-wider font-semibold">PROFESSIONAL NETWORK // LINKEDIN</div>
+                  <a href="https://www.linkedin.com/in/abhijeet-nilesh-fokmare-a95719410" target="_blank" rel="noopener noreferrer" class="font-mono text-sm font-semibold theme-text-primary hover:underline break-all">
+                    linkedin.com/in/abhijeet-nilesh-fokmare-a95719410
+                  </a>
+                </div>
+                <a href="https://www.linkedin.com/in/abhijeet-nilesh-fokmare-a95719410" target="_blank" rel="noopener noreferrer" class="shrink-0 px-4 py-2 rounded-xl badge-secondary-theme font-mono text-xs font-semibold hover:opacity-90 transition-all text-center">
+                  Connect on LinkedIn ↗
+                </a>
+              </div>
+            </div>
+
+            <!-- 3. GitHub & Domain Row -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <a href="https://github.com/abhijeetfokmare" target="_blank" rel="noopener noreferrer" class="tilt-card rounded-xl p-4 group">
+                <div class="tilt-content">
+                  <div class="font-mono text-[10px] theme-text-muted uppercase">GITHUB REPOSITORIES</div>
+                  <div class="font-mono text-sm font-semibold theme-text-primary mt-1 flex items-center justify-between">
+                    <span>@abhijeetfokmare</span>
+                    <span class="theme-accent-secondary">↗</span>
+                  </div>
+                </div>
+              </a>
+
+              <div class="tilt-card rounded-xl p-4">
+                <div class="tilt-content flex items-center justify-between">
+                  <div>
+                    <div class="font-mono text-[10px] theme-text-muted uppercase">WEB PORTAL</div>
+                    <div class="font-mono text-sm font-semibold theme-text-primary mt-1">abhijeetfokmare.me</div>
+                  </div>
+                  <button type="button" id="copy-domain-btn" class="px-2.5 py-1.5 rounded-lg badge-primary-theme font-mono text-[11px] font-semibold transition-all">
+                    Copy URL
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right Column: Direct Mailto Dispatch Composer (6 Cols) -->
+        <div class="lg:col-span-6 flow-assemble" data-asm="right">
+          <div class="tilt-card rounded-2xl p-6 sm:p-8">
+            <form id="contact-form" class="tilt-content space-y-4">
+              <div class="flex items-center justify-between border-b theme-border-subtle pb-3">
+                <span class="font-mono text-xs theme-accent-secondary font-semibold">DIRECT_MAILTO_DISPATCH // COMPOSER</span>
+                <span class="font-mono text-[11px] theme-accent-primary font-semibold">TO: abhijeetnfokmare@gmail.com</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="sender-name" class="block font-mono text-[11px] theme-text-secondary uppercase mb-1.5">Sender Identifier</label>
+                  <input id="sender-name" type="text" required placeholder="Your Name / Handle" class="w-full px-3.5 py-2.5 rounded-lg theme-bg-subcard border theme-border-subtle focus:outline-none text-sm theme-text-primary" />
+                </div>
+                <div>
+                  <label for="sender-email" class="block font-mono text-[11px] theme-text-secondary uppercase mb-1.5">Return Email</label>
+                  <input id="sender-email" type="email" required placeholder="you@domain.com" class="w-full px-3.5 py-2.5 rounded-lg theme-bg-subcard border theme-border-subtle focus:outline-none text-sm theme-text-primary" />
+                </div>
+              </div>
+
+              <div>
+                <label for="sender-subject" class="block font-mono text-[11px] theme-text-secondary uppercase mb-1.5">Transmission Topic</label>
+                <select id="sender-subject" class="w-full px-3.5 py-2.5 rounded-lg theme-bg-subcard border theme-border-subtle focus:outline-none text-sm theme-text-primary">
+                  <option value="Cybersecurity & Network Engineering">Cybersecurity &amp; Network Engineering</option>
+                  <option value="Open Source & Project Collaboration">Open Source &amp; Project Collaboration</option>
+                  <option value="PCCOE / Academic & Hackathon Team">PCCOE / Academic &amp; Hackathon Team</option>
+                  <option value="Internship / Engineering Opportunity">Internship / Engineering Opportunity</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="sender-message" class="block font-mono text-[11px] theme-text-secondary uppercase mb-1.5">Payload Message</label>
+                <textarea id="sender-message" rows="4" required placeholder="Write your message or collaboration proposal..." class="w-full px-3.5 py-2.5 rounded-lg theme-bg-subcard border theme-border-subtle focus:outline-none text-sm theme-text-primary"></textarea>
+              </div>
+
+              <button type="submit" class="w-full py-3 rounded-xl btn-primary-theme font-display font-semibold text-sm transition-all">
+                Format &amp; Dispatch to abhijeetnfokmare@gmail.com →
+              </button>
+
+              <div id="contact-feedback" class="hidden p-3 rounded-lg badge-secondary-theme font-mono text-xs text-center font-semibold"></div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Architectural Footer -->
+  <footer class="border-t theme-border theme-bg-elevated py-10 pb-24 sm:pb-10 transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 font-mono text-xs theme-text-muted">
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="theme-text-primary font-bold">Abhijeet Nilesh Fokmare</span>
+        <span>//</span>
+        <a href="mailto:abhijeetnfokmare@gmail.com" class="theme-accent-secondary font-semibold hover:underline">abhijeetnfokmare@gmail.com</a>
+        <span>//</span>
+        <a href="https://www.linkedin.com/in/abhijeet-nilesh-fokmare-a95719410" target="_blank" rel="noopener noreferrer" class="hover:underline theme-text-secondary">LinkedIn ↗</a>
+        <span>//</span>
+        <a href="https://github.com/abhijeetfokmare" target="_blank" rel="noopener noreferrer" class="hover:underline theme-text-secondary">GitHub ↗</a>
+      </div>
+      <div>
+        abhijeetfokmare.me • Dual-Theme 3D Architecture • PCCOE Pune, IN
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       COMMAND PALETTE MODAL (CMD + K)
+  =========================================== -->
+  <div id="cmd-modal" class="fixed inset-0 z-50 hidden items-start justify-center pt-20 px-4 bg-black/75 backdrop-blur-sm">
+    <div class="w-full max-w-lg rounded-2xl theme-bg-elevated border theme-border shadow-2xl overflow-hidden">
+      <div class="p-4 border-b theme-border-subtle flex items-center justify-between">
+        <div class="flex items-center gap-2 font-mono text-xs theme-accent-secondary font-semibold">
+          <span>⌘</span>
+          <span>SYSTEM COMMAND PALETTE &amp; THEME MATRIX</span>
+        </div>
+        <button id="close-cmd-btn" type="button" class="font-mono text-xs theme-text-muted hover:opacity-80 px-2 py-0.5 rounded theme-bg-subcard border theme-border-subtle">
+          ESC
+        </button>
+      </div>
+      <div class="p-2 divide-y theme-border-subtle font-mono text-xs max-h-[70vh] overflow-y-auto">
+        <button type="button" onclick="toggleSiteTheme(); toggleCmdModal(false);" class="w-full flex items-center justify-between p-3 rounded-lg hover:opacity-85 theme-accent-secondary font-semibold transition-colors text-left">
+          <span id="cmd-theme-toggle-label">Light</span>
+          <span>THEME</span>
+        </button>
+        <button type="button" onclick="toggleAutoScrollTour(); toggleCmdModal(false);" class="w-full flex items-center justify-between p-3 rounded-lg hover:opacity-85 theme-accent-primary font-semibold transition-colors text-left">
+          <span>⏵ Toggle Auto-Scroll Tour (Play / Pause)</span>
+          <span>ACTION</span>
+        </button>
+        <button type="button" onclick="replayAndStartTour(); toggleCmdModal(false);" class="w-full flex items-center justify-between p-3 rounded-lg hover:opacity-85 theme-accent-secondary font-semibold transition-colors text-left">
+          <span>↺ Replay 3D Flow-In Assembly from Top</span>
+          <span>REPLAY</span>
+        </button>
+        <button type="button" onclick="copyEmailToClipboard(); toggleCmdModal(false);" class="w-full flex items-center justify-between p-3 rounded-lg hover:opacity-85 theme-text-primary transition-colors text-left">
+          <span>✉ Copy Email (abhijeetnfokmare@gmail.com)</span>
+          <span class="theme-accent-secondary font-semibold">COPY</span>
+        </button>
+        <a href="https://www.linkedin.com/in/abhijeet-nilesh-fokmare-a95719410" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3 rounded-lg hover:opacity-85 theme-text-primary transition-colors">
+          <span>in Open LinkedIn (abhijeet-nilesh-fokmare-a95719410)</span>
+          <span class="theme-accent-secondary">↗</span>
+        </a>
+        <a href="https://github.com/abhijeetfokmare" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3 rounded-lg hover:opacity-85 theme-text-primary transition-colors">
+          <span>⌥ Open GitHub (@abhijeetfokmare)</span>
+          <span class="theme-accent-primary">↗</span>
+        </a>
+        <a href="#overview" class="cmd-link flex items-center justify-between p-3 rounded-lg hover:opacity-85 theme-text-secondary transition-colors">
+          <span>01. Go to Overview &amp; 3D Topology</span>
+          <span class="theme-accent-secondary">↵</span>
+        </a>
+        <a href="#bento" class="cmd-link flex items-center justify-between p-3 rounded-lg hover:opacity-85 theme-text-secondary transition-colors">
+          <span>02. Inspect Technical Arsenal &amp; Bento</span>
+          <span class="theme-accent-secondary">↵</span>
+        </a>
+        <a href="#milestones" class="cmd-link flex items-center justify-between p-3 rounded-lg hover:opacity-85 theme-text-secondary transition-colors">
+          <span>03. View Academic Milestones (MHT-CET 99.27%ile)</span>
+          <span class="theme-accent-secondary">↵</span>
+        </a>
+        <a href="#contact" class="cmd-link flex items-center justify-between p-3 rounded-lg hover:opacity-85 theme-text-secondary transition-colors">
+          <span>04. Direct Uplink &amp; Mailto Composer</span>
+          <span class="theme-accent-secondary">↵</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       JAVASCRIPT: DUAL THEME, AUTO-SCROLL, 3D ASSEMBLY, THREE.JS
+  =========================================== -->
+  <script>
+    // ---------------------------------------------------------
+    // 0. GLOBAL TOAST & CLIPBOARD HELPERS
+    // ---------------------------------------------------------
+    let toastTimeout = null;
+    function showGlobalToast(message) {
+      const toast = document.getElementById('global-toast');
+      const textEl = document.getElementById('global-toast-text');
+      if (!toast || !textEl) return;
+      textEl.textContent = message;
+      toast.classList.remove('opacity-0', 'translate-y-[-10px]');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-[-10px]');
+      }, 2800);
+    }
+
+    function copyTextFallback(text) {
+      const tempInput = document.createElement('textarea');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+    }
+
+    window.copyEmailToClipboard = function () {
+      copyTextFallback('abhijeetnfokmare@gmail.com');
+      showGlobalToast('Copied abhijeetnfokmare@gmail.com to clipboard');
+    };
+
+    // ---------------------------------------------------------
+    // 1. DUAL-THEME ENGINE (DARK: JET/CERULEAN/ROSE | LIGHT: ICE/AUBERGINE/MARIGOLD)
+    // ---------------------------------------------------------
+    let currentTheme = 'dark';
+    let threeThemeUpdater = null; // Callback registered by Three.js scene
+
+    window.toggleSiteTheme = function () {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', currentTheme);
+
+      const toggleLabel = document.getElementById('theme-toggle-label');
+      const cmdToggleLabel = document.getElementById('cmd-theme-toggle-label');
+      const palettePill = document.getElementById('active-palette-pill');
+
+      if (currentTheme === 'light') {
+        if (toggleLabel) toggleLabel.textContent = 'Dark';
+        if (cmdToggleLabel) cmdToggleLabel.textContent = 'Dark';
+        if (palettePill) palettePill.textContent = 'PALETTE // ICE SILVER • DEEP AUBERGINE • MARIGOLD';
+        showGlobalToast('Light');
+      } else {
+        if (toggleLabel) toggleLabel.textContent = 'Light';
+        if (cmdToggleLabel) cmdToggleLabel.textContent = 'Light';
+        if (palettePill) palettePill.textContent = 'PALETTE // JET BLACK • CERULEAN • NEON ROSE';
+        showGlobalToast('Dark');
+      }
+
+      if (typeof threeThemeUpdater === 'function') {
+        threeThemeUpdater(currentTheme);
+      }
+    };
+
+    // ---------------------------------------------------------
+    // 2. LIVE PUNE IST CLOCK
+    // ---------------------------------------------------------
+    function updatePuneClock() {
+      const clockEl = document.getElementById('live-ist-clock');
+      if (!clockEl) return;
+      const now = new Date();
+      const options = {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      };
+      const timeString = new Intl.DateTimeFormat('en-US', options).format(now);
+      clockEl.textContent = `PUNE IST ${timeString}`;
+    }
+    setInterval(updatePuneClock, 1000);
+    updatePuneClock();
+
+    // ---------------------------------------------------------
+    // 3. 3D FLOW-IN ASSEMBLY ENGINE & AUTO-SCROLL TOUR CONTROLLER
+    // ---------------------------------------------------------
+    const assembleNodes = Array.from(document.querySelectorAll('.flow-assemble'));
+    let lockedCount = 0;
+    const totalAssembleNodes = assembleNodes.length;
+
+    const hudLockCounter = document.getElementById('hud-lock-counter');
+    const hudTourStatus = document.getElementById('hud-tour-status');
+    const hudPlayIcon = document.getElementById('hud-play-icon');
+    const hudProgressCircle = document.getElementById('hud-progress-circle');
+    const hudSpeedBtn = document.getElementById('hud-speed-btn');
+    const navTourIndicator = document.getElementById('nav-tour-indicator');
+
+    function updateLockCounterUI() {
+      if (hudLockCounter) {
+        const cur = String(lockedCount).padStart(2, '0');
+        const tot = String(totalAssembleNodes).padStart(2, '0');
+        hudLockCounter.textContent = `${cur}/${tot}`;
+      }
+    }
+
+    // Configure 3D spatial entry vectors & telemetry badges for each node
+    assembleNodes.forEach((node, idx) => {
+      const dir = node.getAttribute('data-asm') || 'center';
+      let xOffset = '0px';
+      let ryAngle = '0deg';
+      if (dir === 'left') {
+        xOffset = '-70px';
+        ryAngle = '12deg';
+      } else if (dir === 'right') {
+        xOffset = '70px';
+        ryAngle = '-12deg';
+      }
+      node.style.setProperty('--asm-x', xOffset);
+      node.style.setProperty('--asm-ry', ryAngle);
+      node.style.setProperty('--asm-delay', `${(idx % 3) * 65}ms`);
+
+      if (!node.querySelector('.asm-lock-tag')) {
+        const badge = document.createElement('span');
+        badge.className = 'asm-lock-tag';
+        badge.textContent = `LOCKED // 0x${String(idx + 1).padStart(2, '0')}`;
+        node.appendChild(badge);
+      }
+    });
+
+    updateLockCounterUI();
+
+    const assemblyObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          if (!el.classList.contains('assembled')) {
+            el.classList.add('assembled', 'just-locked');
+            lockedCount = document.querySelectorAll('.flow-assemble.assembled').length;
+            updateLockCounterUI();
+            setTimeout(() => {
+              el.classList.remove('just-locked');
+            }, 1300);
+          }
+        }
+      });
+    }, {
+      threshold: 0.14,
+      rootMargin: '0px 0px -6% 0px'
+    });
+
+    assembleNodes.forEach((node) => assemblyObserver.observe(node));
+
+    // Auto-Scroll Tour Engine State
+    let autoScrollActive = false;
+    let autoScrollSpeedMultiplier = 1;
+    let exactScrollY = window.scrollY;
+
+    function updateAutoScrollUI() {
+      if (hudTourStatus) {
+        hudTourStatus.textContent = autoScrollActive ? 'AUTO-SCROLL: ON' : 'AUTO-SCROLL: PAUSED';
+      }
+      if (hudPlayIcon) {
+        hudPlayIcon.textContent = autoScrollActive ? '⏸' : '⏵';
+      }
+      if (navTourIndicator) {
+        navTourIndicator.className = autoScrollActive
+          ? 'w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping'
+          : 'w-1.5 h-1.5 rounded-full';
+      }
+    }
+
+    function updateScrollProgressRing() {
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+      if (hudProgressCircle) {
+        const circumference = 94.2;
+        hudProgressCircle.style.strokeDashoffset = String(circumference - progress * circumference);
+      }
+    }
+
+    window.addEventListener('scroll', updateScrollProgressRing, { passive: true });
+
+    function pauseAutoScrollOnUserInterrupt() {
+      if (autoScrollActive) {
+        autoScrollActive = false;
+        updateAutoScrollUI();
+      }
+    }
+
+    window.addEventListener('wheel', pauseAutoScrollOnUserInterrupt, { passive: true });
+    window.addEventListener('touchstart', (e) => {
+      if (!e.target.closest('#auto-scroll-hud') && !e.target.closest('#nav-tour-btn') && !e.target.closest('#theme-toggle-btn')) {
+        pauseAutoScrollOnUserInterrupt();
+      }
+    }, { passive: true });
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' '].includes(e.key)) {
+        pauseAutoScrollOnUserInterrupt();
+      }
+    });
+
+    function autoScrollStep() {
+      if (autoScrollActive) {
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        if (window.scrollY >= maxScroll - 2) {
+          autoScrollActive = false;
+          updateAutoScrollUI();
+          showGlobalToast('3D Architecture Assembly Complete');
+        } else {
+          const basePxPerFrame = 1.955 * autoScrollSpeedMultiplier;
+          exactScrollY = window.scrollY + basePxPerFrame;
+          window.scrollTo(0, exactScrollY);
+        }
+      }
+      requestAnimationFrame(autoScrollStep);
+    }
+    requestAnimationFrame(autoScrollStep);
+
+    window.toggleAutoScrollTour = function () {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (!autoScrollActive && window.scrollY >= maxScroll - 10) {
+        window.replayAndStartTour();
+        return;
+      }
+      autoScrollActive = !autoScrollActive;
+      exactScrollY = window.scrollY;
+      updateAutoScrollUI();
+    };
+
+    window.replayAndStartTour = function () {
+      autoScrollActive = false;
+      updateAutoScrollUI();
+
+      assembleNodes.forEach((node) => {
+        node.classList.remove('assembled', 'just-locked');
+      });
+      lockedCount = 0;
+      updateLockCounterUI();
+
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      exactScrollY = 0;
+
+      setTimeout(() => {
+        assembleNodes.slice(0, 2).forEach((node) => {
+          node.classList.add('assembled', 'just-locked');
+        });
+        lockedCount = document.querySelectorAll('.flow-assemble.assembled').length;
+        updateLockCounterUI();
+        autoScrollActive = true;
+        updateAutoScrollUI();
+        showGlobalToast('3D Flow-In Assembly Tour Started');
+      }, 350);
+    };
+
+    const hudToggleBtn = document.getElementById('hud-toggle-tour-btn');
+    const hudReplayBtn = document.getElementById('hud-replay-btn');
+    const navTourBtn = document.getElementById('nav-tour-btn');
+
+    if (hudToggleBtn) hudToggleBtn.addEventListener('click', window.toggleAutoScrollTour);
+    if (navTourBtn) navTourBtn.addEventListener('click', window.toggleAutoScrollTour);
+    if (hudReplayBtn) hudReplayBtn.addEventListener('click', window.replayAndStartTour);
+
+    if (hudSpeedBtn) {
+      hudSpeedBtn.addEventListener('click', () => {
+        autoScrollSpeedMultiplier = autoScrollSpeedMultiplier === 1 ? 2 : 1;
+        hudSpeedBtn.textContent = `${autoScrollSpeedMultiplier}x`;
+        showGlobalToast(`Auto-Scroll Speed: ${autoScrollSpeedMultiplier}x`);
+      });
+    }
+
+    // ---------------------------------------------------------
+    // 4. CUSTOM PRECISION CURSOR
+    // ---------------------------------------------------------
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorRing = document.getElementById('cursor-ring');
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (cursorDot) {
+        cursorDot.style.left = `${mouseX}px`;
+        cursorDot.style.top = `${mouseY}px`;
+      }
+    });
+
+    function animateCursorRing() {
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      if (cursorRing) {
+        cursorRing.style.left = `${ringX}px`;
+        cursorRing.style.top = `${ringY}px`;
+      }
+      requestAnimationFrame(animateCursorRing);
+    }
+    animateCursorRing();
+
+    document.querySelectorAll('a, button, input, select, textarea').forEach((el) => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+    });
+
+    // ---------------------------------------------------------
+    // 5. 3D PERSPECTIVE TILT & RADIAL SPOTLIGHT CARDS
+    // ---------------------------------------------------------
+    const tiltCards = document.querySelectorAll('.tilt-card');
+    tiltCards.forEach((card) => {
+      card.addEventListener('mousemove', (e) => {
+        if (card.classList.contains('flow-assemble') && !card.classList.contains('assembled')) return;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -4.2;
+        const rotateY = ((x - centerX) / centerX) * 4.2;
+
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+        card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        if (card.classList.contains('flow-assemble') && !card.classList.contains('assembled')) return;
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+      });
+    });
+
+    // ---------------------------------------------------------
+    // 6. INTERACTIVE SKILL TELEMETRY PILLS
+    // ---------------------------------------------------------
+    const skillReadout = document.getElementById('skill-telemetry-readout');
+    document.querySelectorAll('.skill-pill').forEach((pill) => {
+      pill.addEventListener('mouseenter', () => {
+        const info = pill.getAttribute('data-info');
+        if (skillReadout && info) {
+          skillReadout.textContent = info;
+        }
+      });
+    });
+
+    // ---------------------------------------------------------
+    // 7. COMMAND PALETTE (CMD+K), COPY DOMAIN & MAILTO COMPOSER
+    // ---------------------------------------------------------
+    const cmdModal = document.getElementById('cmd-modal');
+    const openCmdBtn = document.getElementById('open-cmd-btn');
+    const closeCmdBtn = document.getElementById('close-cmd-btn');
+
+    window.toggleCmdModal = function(show) {
+      if (!cmdModal) return;
+      if (show) {
+        pauseAutoScrollOnUserInterrupt();
+        cmdModal.classList.remove('hidden');
+        cmdModal.classList.add('flex');
+      } else {
+        cmdModal.classList.add('hidden');
+        cmdModal.classList.remove('flex');
+      }
+    };
+
+    if (openCmdBtn) openCmdBtn.addEventListener('click', () => window.toggleCmdModal(true));
+    if (closeCmdBtn) closeCmdBtn.addEventListener('click', () => window.toggleCmdModal(false));
+
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        const isHidden = cmdModal.classList.contains('hidden');
+        window.toggleCmdModal(isHidden);
+      } else if (e.key === 'Escape') {
+        window.toggleCmdModal(false);
+      }
+    });
+
+    document.querySelectorAll('.cmd-link').forEach((link) => {
+      link.addEventListener('click', () => window.toggleCmdModal(false));
+    });
+
+    const copyDomainBtn = document.getElementById('copy-domain-btn');
+    if (copyDomainBtn) {
+      copyDomainBtn.addEventListener('click', () => {
+        copyTextFallback('https://abhijeetfokmare.me');
+        copyDomainBtn.textContent = 'Copied ✓';
+        showGlobalToast('Copied https://abhijeetfokmare.me to clipboard');
+        setTimeout(() => {
+          copyDomainBtn.textContent = 'Copy URL';
+        }, 2000);
+      });
+    }
+
+    const contactForm = document.getElementById('contact-form');
+    const contactFeedback = document.getElementById('contact-feedback');
+    if (contactForm) {
+      contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        pauseAutoScrollOnUserInterrupt();
+        const name = document.getElementById('sender-name').value.trim();
+        const email = document.getElementById('sender-email').value.trim();
+        const topic = document.getElementById('sender-subject').value;
+        const message = document.getElementById('sender-message').value.trim();
+
+        const subjectEncoded = encodeURIComponent(`[abhijeetfokmare.me] ${topic} — from ${name}`);
+        const bodyEncoded = encodeURIComponent(`Sender: ${name} (${email})\nTopic: ${topic}\n\n${message}`);
+        window.location.href = `mailto:abhijeetnfokmare@gmail.com?subject=${subjectEncoded}&body=${bodyEncoded}`;
+
+        contactFeedback.textContent = `[DISPATCHED] Formatted mailto packet to abhijeetnfokmare@gmail.com for ${name}.`;
+        contactFeedback.classList.remove('hidden');
+        showGlobalToast('Opening mail client for abhijeetnfokmare@gmail.com');
+      });
+    }
+
+    // ---------------------------------------------------------
+    // 9. THREE.JS 3D INTERACTIVE & THEME-REACTIVE SCULPTURE
+    // ---------------------------------------------------------
+    function initHeroThreeJS() {
+      const container = document.getElementById('hero-canvas-container');
+      if (!container || typeof THREE === 'undefined') return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        45,
+        container.clientWidth / container.clientHeight,
+        0.1,
+        1000
+      );
+      camera.position.z = 5.5;
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      const mainGroup = new THREE.Group();
+      scene.add(mainGroup);
+
+      // Materials configured for Dark Mode Default (Cerulean Blue #007BA7 + Neon Rose #FF2D95 + Jet Black #0A0A0A)
+      const wirePrimaryMaterial = new THREE.MeshBasicMaterial({
+        color: 0x007BA7,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.52
+      });
+
+      const solidCoreMaterial = new THREE.MeshStandardMaterial({
+        color: 0x0E131A,
+        roughness: 0.25,
+        metalness: 0.85,
+        flatShading: true
+      });
+
+      const pointsSecondaryMaterial = new THREE.PointsMaterial({
+        color: 0xFF2D95,
+        size: 0.052,
+        transparent: true,
+        opacity: 0.92
+      });
+
+      const ringSecondaryMaterial = new THREE.MeshBasicMaterial({
+        color: 0xFF2D95,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.34
+      });
+
+      const networkGroup = new THREE.Group();
+      const orbitalGroup = new THREE.Group();
+      const cipherGroup = new THREE.Group();
+
+      // Mode 1: Network Mesh Node
+      const icoGeo = new THREE.IcosahedronGeometry(1.65, 2);
+      const icoWire = new THREE.Mesh(icoGeo, wirePrimaryMaterial);
+      const icoPoints = new THREE.Points(icoGeo, pointsSecondaryMaterial);
+      const innerCoreGeo = new THREE.IcosahedronGeometry(1.1, 1);
+      const innerCoreMesh = new THREE.Mesh(innerCoreGeo, solidCoreMaterial);
+      networkGroup.add(icoWire, icoPoints, innerCoreMesh);
+
+      const gyroGeo = new THREE.TorusGeometry(2.15, 0.014, 16, 100);
+      const gyroRing = new THREE.Mesh(gyroGeo, ringSecondaryMaterial);
+      gyroRing.rotation.x = Math.PI / 3;
+      networkGroup.add(gyroRing);
+
+      // Mode 2: Orbital Lattice
+      const torus1 = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.02, 16, 120), wirePrimaryMaterial);
+      const torus2 = new THREE.Mesh(new THREE.TorusGeometry(1.3, 0.02, 16, 100), ringSecondaryMaterial);
+      torus2.rotation.x = Math.PI / 2.2;
+      const torus3 = new THREE.Mesh(new THREE.TorusGeometry(1.9, 0.015, 16, 120), wirePrimaryMaterial);
+      torus3.rotation.y = Math.PI / 3;
+      const octaCore = new THREE.Mesh(new THREE.OctahedronGeometry(0.85, 0), solidCoreMaterial);
+      const octaWire = new THREE.Mesh(new THREE.OctahedronGeometry(0.88, 0), ringSecondaryMaterial);
+      orbitalGroup.add(torus1, torus2, torus3, octaCore, octaWire);
+      orbitalGroup.visible = false;
+
+      // Mode 3: Security Cipher Core
+      const knotGeo = new THREE.TorusKnotGeometry(1.05, 0.28, 110, 16);
+      const knotWire = new THREE.Mesh(knotGeo, wirePrimaryMaterial);
+      const knotPoints = new THREE.Points(knotGeo, pointsSecondaryMaterial);
+      const cageGeo = new THREE.DodecahedronGeometry(1.95, 1);
+      const cageWire = new THREE.Mesh(cageGeo, ringSecondaryMaterial);
+      cipherGroup.add(knotWire, knotPoints, cageWire);
+      cipherGroup.visible = false;
+
+      mainGroup.add(networkGroup, orbitalGroup, cipherGroup);
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+      scene.add(ambientLight);
+
+      const primaryLight = new THREE.PointLight(0x007BA7, 2.5, 14);
+      primaryLight.position.set(3, 3, 4);
+      scene.add(primaryLight);
+
+      const secondaryLight = new THREE.PointLight(0xFF2D95, 2.2, 14);
+      secondaryLight.position.set(-4, -2, 3);
+      scene.add(secondaryLight);
+
+      // Register dynamic theme updater for Dark vs Light mode
+      threeThemeUpdater = function (theme) {
+        if (theme === 'light') {
+          // Light Mode: Ice Silver (#EBF0F5), Deep Aubergine (#2D142C), Marigold (#EAA221)
+          wirePrimaryMaterial.color.setHex(0x2D142C);
+          wirePrimaryMaterial.opacity = 0.45;
+          solidCoreMaterial.color.setHex(0x2D142C);
+          pointsSecondaryMaterial.color.setHex(0xEAA221);
+          ringSecondaryMaterial.color.setHex(0xEAA221);
+          ringSecondaryMaterial.opacity = 0.55;
+          primaryLight.color.setHex(0xEAA221);
+          secondaryLight.color.setHex(0x2D142C);
+        } else {
+          // Dark Mode: Jet Black (#0A0A0A), Cerulean Blue (#007BA7), Neon Rose (#FF2D95)
+          wirePrimaryMaterial.color.setHex(0x007BA7);
+          wirePrimaryMaterial.opacity = 0.52;
+          solidCoreMaterial.color.setHex(0x0E131A);
+          pointsSecondaryMaterial.color.setHex(0xFF2D95);
+          ringSecondaryMaterial.color.setHex(0xFF2D95);
+          ringSecondaryMaterial.opacity = 0.34;
+          primaryLight.color.setHex(0x007BA7);
+          secondaryLight.color.setHex(0xFF2D95);
+        }
+      };
+
+      let isDragging = false;
+      let prevX = 0;
+      let prevY = 0;
+      let targetRotX = 0.2;
+      let targetRotY = 0.4;
+
+      container.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        prevX = e.clientX;
+        prevY = e.clientY;
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          const deltaX = e.clientX - prevX;
+          const deltaY = e.clientY - prevY;
+          targetRotY += deltaX * 0.008;
+          targetRotX += deltaY * 0.008;
+          prevX = e.clientX;
+          prevY = e.clientY;
+        } else {
+          const normX = (e.clientX / window.innerWidth - 0.5) * 0.45;
+          const normY = (e.clientY / window.innerHeight - 0.5) * 0.45;
+          targetRotY += normX * 0.01;
+          targetRotX += normY * 0.01;
+        }
+      });
+
+      container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          prevX = e.touches[0].clientX;
+          prevY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', () => {
+        isDragging = false;
+      });
+
+      window.addEventListener('touchmove', (e) => {
+        if (isDragging && e.touches.length === 1) {
+          const deltaX = e.touches[0].clientX - prevX;
+          const deltaY = e.touches[0].clientY - prevY;
+          targetRotY += deltaX * 0.008;
+          targetRotX += deltaY * 0.008;
+          prevX = e.touches[0].clientX;
+          prevY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      const modeLabel = document.getElementById('webgl-mode-label');
+      document.querySelectorAll('.mode-switch-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const mode = btn.getAttribute('data-mode');
+
+          document.querySelectorAll('.mode-switch-btn').forEach((b) => {
+            b.className = 'mode-switch-btn px-2.5 py-1 rounded text-[11px] font-mono theme-bg-surface theme-text-secondary border theme-border-subtle transition-all';
+          });
+          btn.className = 'mode-switch-btn px-2.5 py-1 rounded text-[11px] font-mono badge-secondary-theme font-semibold transition-all';
+
+          networkGroup.visible = mode === 'network';
+          orbitalGroup.visible = mode === 'orbital';
+          cipherGroup.visible = mode === 'cipher';
+
+          if (modeLabel) {
+            if (mode === 'network') modeLabel.textContent = 'TOPOLOGY // MESH_CORE_3D';
+            if (mode === 'orbital') modeLabel.textContent = 'ORBITAL // LATTICE_RING_3D';
+            if (mode === 'cipher') modeLabel.textContent = 'SECURITY // CIPHER_KNOT_3D';
+          }
+        });
+      });
+
+      window.addEventListener('resize', () => {
+        if (!container) return;
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      });
+
+      const scrollTelemetryEl = document.getElementById('webgl-scroll-telemetry');
+
+      function animateThree() {
+        requestAnimationFrame(animateThree);
+
+        const scrollRadians = window.scrollY * 0.0022;
+        if (scrollTelemetryEl) {
+          scrollTelemetryEl.textContent = `DEPTH: ${scrollRadians.toFixed(2)}rad`;
+        }
+
+        targetRotY += 0.0028;
+        mainGroup.rotation.y += ((targetRotY + scrollRadians) - mainGroup.rotation.y) * 0.08;
+        mainGroup.rotation.x += ((targetRotX + scrollRadians * 0.35) - mainGroup.rotation.x) * 0.08;
+
+        const breathScale = 1 + Math.sin(scrollRadians * 1.5) * 0.05;
+        gyroRing.scale.set(breathScale, breathScale, breathScale);
+        gyroRing.rotation.z -= 0.004;
+        torus1.rotation.y += 0.006;
+        torus2.rotation.z -= 0.005;
+        knotWire.rotation.z += 0.003;
+
+        renderer.render(scene, camera);
+      }
+
+      animateThree();
+    }
+
+    window.onload = function () {
+      initHeroThreeJS();
+      updateScrollProgressRing();
+
+      setTimeout(() => {
+        if (window.scrollY < 40) {
+          autoScrollActive = true;
+          exactScrollY = window.scrollY;
+          updateAutoScrollUI();
+        }
+      }, 1200);
+    };
+  </script>
+</body>
+</html>
